@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 
@@ -44,10 +45,6 @@ public class Character : MonoBehaviour
                 }
             }
         }
-        else if (other.collider.CompareTag(TagManager.Bot_Tag))
-        {
-            RemoveBrick();
-        }
         else if (other.collider.CompareTag(TagManager.Step_Tag))
         {
             Step step = other.gameObject.GetComponent<Step>();
@@ -69,17 +66,33 @@ public class Character : MonoBehaviour
                 checkLadder = true;
             }
         }
-        else if (other.collider.CompareTag(TagManager.Platform_Tag))
-        {
-            Platform platform = other.gameObject.GetComponent<Platform>();
-            if (platform != oldPlatform)
+        //else if (other.collider.CompareTag(TagManager.Ground_Tag))
+        //{
+        //    oldPlatform.TriggerDoor();
+        //    Debug.Log("Ground Collision");
+        //}
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(TagManager.Door_Tag))
+        {         
+            Door door = other.gameObject.GetComponent<Door>();
+            door.TurnOffMesh();
+            Platform platform = door.GetPlatform();
+            if (oldPlatform == platform)
             {
+                oldPlatform.TriggerDoor();
+            }
+            else if (platform != oldPlatform)
+            {
+                RemoveAllBrick();
                 ChangePlatform(platform);
             }
         }
     }
     private void AddBrick(Brick brick)
     {
+        oldPlatform.SetPosForListPosBrick(brick.tfrmBrick.position);
         brick.tfrmBrick.parent = _image;
         brick.Collect();
         if(_stackBrick.Count> 0)
@@ -93,7 +106,16 @@ public class Character : MonoBehaviour
         brick.transform.localRotation = Quaternion.Euler(Vector3.zero);
         _stackBrick.Push(brick);      
     }
-    private void RemoveBrick()
+
+    private void RemoveAllBrick()
+    {
+        while (_stackBrick.Count > 0)
+        {
+            Brick brick = _stackBrick.Pop();
+            brick.gameObject.SetActive(false);
+        }
+    }
+    private void CollisionCharacter()
     {
         StartCoroutine(IDelayReMoveBrick());
     }
@@ -111,9 +133,12 @@ public class Character : MonoBehaviour
     {
         if (_stackBrick != null)
         {
-            _stackBrick.Peek().transform.parent = _parentBrick;
-            _stackBrick.Peek().gameObject.SetActive(false);
+            Brick brick = _stackBrick.Peek();
+            brick.transform.parent = _parentBrick;
+            brick.ResetBrick();
+            brick.gameObject.SetActive(false);
             _stackBrick.Pop();
+            oldPlatform.GenerateBrick(1, _color);
         }
     }
 

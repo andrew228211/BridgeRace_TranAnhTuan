@@ -13,4 +13,5 @@ public class TagManager
     public const string Step_Tag = "step";
     public const string Ground_Tag = "ground";
     public const string Platform_Tag = "platform";
+    public const string Door_Tag = "door";
 }

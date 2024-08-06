@@ -6,6 +6,7 @@ public class Platform : MonoBehaviour
 {
     [Header("Bridge")]
     [SerializeField] private Bridge[] bridges;
+    [SerializeField] private Door[] doors;
     [Header("Brick")]
     [SerializeField] private List<Vector3> listPosBrick; //Khoi tao ban dau de chua
     [SerializeField] private List<Brick> listActiveBrick;
@@ -17,6 +18,17 @@ public class Platform : MonoBehaviour
     {
         InitBrick();
         InitBridge();
+        InitDoor();
+    }
+    private void InitDoor()
+    {
+        if (doors.Length>0)
+        {
+            for(int i = 0; i < doors.Length; i++)
+            {
+                doors[i].TurnOnTrigger();
+            }
+        }
     }
     private void InitBridge()
     {
@@ -25,6 +37,17 @@ public class Platform : MonoBehaviour
             bridges[i].OnInit();
         }
     }
+    public void TriggerDoor()
+    {
+        if (doors.Length > 0)
+        {
+            for (int i = 0; i < doors.Length; i++)
+            {
+                doors[i].TurnOffTrigger();
+            }
+        }
+    }
+    #region Handle Brick
     private void InitBrick()
     {
         for(int i = 0; i < w; i++)
@@ -56,7 +79,10 @@ public class Platform : MonoBehaviour
             listPosBrick.Remove(listPosBrick[pos]);
         }
     }
-
+    public void SetPosForListPosBrick(Vector3 pos)
+    {
+        listPosBrick.Add(pos);
+    }
 
 
     public void HideBrickAfterChararacterPass(TypeColor color)
@@ -74,4 +100,5 @@ public class Platform : MonoBehaviour
     {
         GenerateBrick(6, color);
     }
+    #endregion
 }

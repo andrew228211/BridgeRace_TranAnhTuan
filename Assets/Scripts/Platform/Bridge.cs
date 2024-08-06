@@ -27,7 +27,7 @@ public class Bridge : MonoBehaviour
             }
             _stackStep.Push(X);
             X.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            Debug.Log(X.transform.localRotation);
+            //Debug.Log(X.transform.localRotation);
         }
     }
 }

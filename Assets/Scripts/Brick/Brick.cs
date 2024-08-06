@@ -64,4 +64,11 @@ public class Brick : MonoBehaviour
         rbBrick.isKinematic = true;
         boxCollider.enabled = false;
     }
+    public void ResetBrick()
+    {
+        tfrmBrick.rotation = Quaternion.Euler(Vector3.zero);
+        IsCollected = false;
+        rbBrick.isKinematic = false;
+        boxCollider.enabled = true;
+    }
 }

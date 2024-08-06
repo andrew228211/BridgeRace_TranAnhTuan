@@ -50,8 +50,6 @@ public class Player : Character
         {
             return;
         }
-
-        Debug.Log(_moveDirection);
         tfrm.position += new Vector3(_joystick.Horizontal, 0, _joystick.Vertical) * _moveSpeed * Time.deltaTime;
         if (_joystick.Direction.sqrMagnitude <= 0.1f) StopMoving();
         if (Mathf.Abs(_moveDirection.x) > 0.01f || Mathf.Abs(_moveDirection.y) > 0.01f) 
