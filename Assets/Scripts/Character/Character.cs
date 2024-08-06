@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI txtName;
     [SerializeField] private ColorData _colorData;
     [SerializeField] private TypeColor _color;
+    [SerializeField] private SkinnedMeshRenderer _meshRenderer;
     [Header("Movement")]
     public Transform tfrm;
     public  Rigidbody rb;
@@ -20,77 +21,44 @@ public class Character : MonoBehaviour
     [SerializeField] private Stack<Brick> _stackBrick;
     [SerializeField] private Transform _image;
     [SerializeField] private Vector3 _offset;
-    [Header("Ladder")]
-    public bool checkLadder;
-    private bool isColider;
+    public bool IsOnGround { get;private set; }
     public virtual void Init() {
         _stackBrick = new Stack<Brick>();
-        isColider = false;
+    }
+    public void SetColor(int index)
+    {
+        _color = (TypeColor)index;
+        _meshRenderer.material = _colorData.GetMat((TypeColor)index);
+    }
+    public TypeColor GetColor()
+    {
+        return _color;
     }
     public virtual void StopMoving()
     {
 
     }
-    private void OnCollisionEnter(Collision other)
+    protected virtual void OnCollisionEnter(Collision other)
     {
-        if (other.collider.CompareTag(TagManager.Brick_Tag))
+        if (other.collider.CompareTag(TagManager.Step_Tag))
         {
-            Brick brick = other.gameObject.GetComponent<Brick>();
-            if (brick.color == _color || brick.color.Equals(TypeColor.none))
-            {
-                if (!brick.IsCollected)
-                {
-                    brick.ChangeColor(_color);
-                    AddBrick(brick);
-                }
-            }
-        }
-        else if (other.collider.CompareTag(TagManager.Step_Tag))
-        {
+            IsOnGround = false;
             Step step = other.gameObject.GetComponent<Step>();
             if (step.GetColor() != _color)
             {
                 if (_stackBrick.Count > 0)
                 {
-                    checkLadder = true;
                     step.SetColor(_colorData.GetMat(_color), _color);
                     BuildBridge();
                 }
             }
-            if (step.GetColor() != _color && _stackBrick.Count == 0)
-            {
-                checkLadder = false;
-            }
-            if (step.GetColor() == _color)
-            {
-                checkLadder = true;
-            }
         }
-        //else if (other.collider.CompareTag(TagManager.Ground_Tag))
-        //{
-        //    oldPlatform.TriggerDoor();
-        //    Debug.Log("Ground Collision");
-        //}
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(TagManager.Door_Tag))
-        {         
-            Door door = other.gameObject.GetComponent<Door>();
-            door.TurnOffMesh();
-            Platform platform = door.GetPlatform();
-            if (oldPlatform == platform)
-            {
-                oldPlatform.TriggerDoor();
-            }
-            else if (platform != oldPlatform)
-            {
-                RemoveAllBrick();
-                ChangePlatform(platform);
-            }
+        else if (other.collider.CompareTag(TagManager.Ground_Tag))
+        {
+            IsOnGround = true;
         }
     }
-    private void AddBrick(Brick brick)
+    public void AddBrick(Brick brick)
     {
         oldPlatform.SetPosForListPosBrick(brick.tfrmBrick.position);
         brick.tfrmBrick.parent = _image;
@@ -146,6 +114,7 @@ public class Character : MonoBehaviour
     {
         if (oldPlatform != null)
         {
+            RemoveAllBrick();
             oldPlatform.HideBrickAfterChararacterPass(_color);
             oldPlatform = platform;
             oldPlatform.UpdateBrick(_color);

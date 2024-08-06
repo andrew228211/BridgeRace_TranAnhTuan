@@ -33,6 +33,35 @@ public class Brick : MonoBehaviour
         color = colorType;
         render.material = colorData.GetMat(colorType);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(TagManager.Player_Tag))
+        {
+           
+            Player player = other.GetComponent<Player>();
+            if (color == player.GetColor() || color.Equals(TypeColor.none))
+            {
+                if (!IsCollected)
+                {
+                    ChangeColor(player.GetColor());
+                    player.AddBrick(this);
+                }
+            }
+        }
+        else if (other.CompareTag(TagManager.Bot_Tag))
+        {
+            Bot bot = other.GetComponent<Bot>();
+            if (color == bot.GetColor() || color.Equals(TypeColor.none))
+            {
+                if (!IsCollected)
+                {
+                    ChangeColor(bot.GetColor());
+                    bot.AddBrick(this);
+                }
+            }
+        }
+    }
     public void Explode(Vector3 pos,Transform parent)
     {
         rbBrick.isKinematic = false;
@@ -68,7 +97,7 @@ public class Brick : MonoBehaviour
     {
         tfrmBrick.rotation = Quaternion.Euler(Vector3.zero);
         IsCollected = false;
-        rbBrick.isKinematic = false;
+        rbBrick.isKinematic = true;
         boxCollider.enabled = true;
     }
 }
