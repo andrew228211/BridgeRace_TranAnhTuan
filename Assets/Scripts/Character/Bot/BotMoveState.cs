@@ -11,6 +11,7 @@ public class BotMoveState : IState<Bot>
     {
         SetupPos(t);
         t.anim.SetFloat("velocity", 0);
+        checkTarget = false;
     }
 
     public void OnExecute(Bot t)
@@ -24,18 +25,13 @@ public class BotMoveState : IState<Bot>
         {
             t.anim.SetFloat("velocity", 0);
         }
+        if (t.numberBrickToCollect <= 0)
+        {
+            t.ChangeState(t._botBuildState);
+        }
         if (Vector3.Distance(t.tfrm.position,targetPos)<thresold)
         {
-            if (checkTarget)
-            {
-                Debug.Log(t.numberBrickToCollect);
-                t.ChangeState(t._botBuildState);
-            }
-            else
-            {
-                t.numberBrickToCollect -= 1;
-                SetupPos(t);
-            }
+            SetupPos(t);
         }
     }
     public void OnExit(Bot t)
@@ -56,7 +52,6 @@ public class BotMoveState : IState<Bot>
             targetPos = t.GetTargetBrick();
             checkTarget = false;
         }
-        Debug.Log(t.numberBrickToCollect + " pos: " + targetPos );
         t.SetDestination(targetPos);
     }
 }

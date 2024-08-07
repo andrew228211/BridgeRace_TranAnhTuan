@@ -6,64 +6,69 @@ using UnityEngine.AI;
 
 public class Bot : Character
 {
-    public Camera cam;
     public NavMeshAgent agent;
 
     // ----------State--------------------
     public StateMachine<Bot> _stateMachine;
     public BotBuildState _botBuildState;
-    public BotCollectState _botCollectState;  
+ 
     public BotMoveState _botMoveState;
 
     private int numberBrickToPassPlatform;
     public int numberBrickToCollect;
+    public int numberBrick { get; private set; }
+    private Bridge _bridgeToBuild;
+    public Bridge BuildBridge 
+    {
+        get { return _bridgeToBuild; }
+        set { _bridgeToBuild = value; }
+    }
     public int NumberBrickToPassPlatform
     {
         get { return numberBrickToPassPlatform; }
         set { numberBrickToPassPlatform = value; } 
     }
     #region Set up target brick for bot
-    private Stack<Vector3> stackTargetBricks;
+    [SerializeField] private List<Vector3> _listTargetBricks;
     public void SetTargetBrick(Vector3 pos)
     {
-        stackTargetBricks.Push(pos);
+        _listTargetBricks.Add(pos);
     }
     public bool HaveStackBrick()
     {
-        if (stackTargetBricks.Count == 0) return false;
+        if (_listTargetBricks.Count == 0) return false;
         return true;
     }
     public Vector3 GetTargetBrick()
     {
-        Debug.Log(stackTargetBricks.Count);
-        return stackTargetBricks.Pop();
+        return _listTargetBricks[0];
+    }
+    public void RemovePosInStackAfterCollision(Vector3 pos)
+    {
+        _listTargetBricks.Remove(pos);
+        numberBrickToCollect -= 1;
+        numberBrickToPassPlatform -= 1;
     }
     #endregion
     private void Awake()
     {
-        stackTargetBricks = new Stack<Vector3>();     
+        _listTargetBricks = new List<Vector3>();   
     }
     private void Update()
     {
-        //if (Input.GetMouseButton(0))
-        //{
-        //    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        //    RaycastHit hit;
-        //    if (Physics.Raycast(ray, out hit))
-        //    {
-        //        agent.SetDestination(hit.point);
-        //    }
-        //}
         _stateMachine.Update();
+    }
+    public void UpdateNumberBrickToCollect()
+    {
+        numberBrickToCollect = Random.Range(1,Mathf.Max(1,Mathf.Min(numberBrickToPassPlatform,18)));
+        Debug.Log(NumberBrickToPassPlatform);
     }
     public override void Init()
     {
         base.Init();
         numberBrickToPassPlatform = oldPlatform.numBrickToPass;
-        Debug.Log(numberBrickToCollect);
-        numberBrickToCollect = Random.Range(1, numberBrickToPassPlatform - 2);
-        InitState();
-      
+        UpdateNumberBrickToCollect();
+        InitState();     
     }
     protected override void OnCollisionEnter(Collision collision)
     {
@@ -76,13 +81,14 @@ public class Bot : Character
         {
             agent.isStopped = true;
         }
+        rb.velocity = Vector3.zero;
+        agent.velocity = Vector3.zero;
         agent.enabled = false;
     }
     private void InitState()
     {
         _stateMachine = new StateMachine<Bot>(this);
         _botBuildState = new BotBuildState();
-        _botCollectState = new BotCollectState();
         _botMoveState = new BotMoveState();
         _stateMachine.ChangeState(_botMoveState);
     }

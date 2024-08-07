@@ -34,6 +34,7 @@ public class Door : MonoBehaviour
             if (character.IsOnGround)
             {
                 character.oldPlatform.TriggerDoor();
+               
             }
             else if (_platform != character.oldPlatform)
             {

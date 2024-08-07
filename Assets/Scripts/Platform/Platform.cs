@@ -22,7 +22,7 @@ public class Platform : MonoBehaviour
         InitBrick();
         //InitBridge();
         InitDoor();
-        numBrickToPass = 18;
+        numBrickToPass = 20;
     }
     private void InitDoor()
     {
@@ -109,7 +109,7 @@ public class Platform : MonoBehaviour
             listActiveBrick.Add(brick);
             if (bot != null)
             {
-                bot.SetTargetBrick(listPosBrick[pos]);
+                bot.SetTargetBrick(brick.tfrmBrick.position);
             }
             listPosBrick.Remove(listPosBrick[pos]);
         }

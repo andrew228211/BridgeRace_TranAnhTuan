@@ -21,6 +21,7 @@ public class Character : MonoBehaviour
     [SerializeField] private Stack<Brick> _stackBrick;
     [SerializeField] private Transform _image;
     [SerializeField] private Vector3 _offset;
+
     public bool IsOnGround { get;private set; }
     public virtual void Init() {
         _stackBrick = new Stack<Brick>();
@@ -37,6 +38,17 @@ public class Character : MonoBehaviour
     public virtual void StopMoving()
     {
 
+    }
+    public bool CheckImageBrick()
+    {
+        if (_stackBrick.Count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     protected virtual void OnCollisionEnter(Collision other)
     {
@@ -143,6 +155,7 @@ public class Character : MonoBehaviour
         }
         return move;
     }
+
     private Vector3 GetDirectioin()
     {
         return tfrm.TransformDirection(Vector3.forward);

@@ -55,10 +55,10 @@ public class Brick : MonoBehaviour
             if (color == bot.GetColor() || color.Equals(TypeColor.none))
             {
                 if (!IsCollected)
-                {
-                    Debug.Log("aaaaaaaaaaaaaaaa");
+                {                
                     ChangeColor(bot.GetColor());
-                    bot.AddBrick(this);
+                    bot.RemovePosInStackAfterCollision(tfrmBrick.position);
+                    bot.AddBrick(this);              
                 }
             }
         }

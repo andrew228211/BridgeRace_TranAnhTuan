@@ -45,4 +45,16 @@ public class Bridge : MonoBehaviour
     {
         return steps[0].transform.position;
     }
+    public Vector3 GetLastBot(Bot bot)
+    {       
+        return steps[steps.Count-1].transform.position;
+    }
+    public bool CheckLastStep(Character character)
+    {
+        if (character.GetColor() == steps[steps.Count-1].GetColor())
+        {
+            return true;
+        }
+        return false;
+    }
 }
