@@ -56,6 +56,7 @@ public class Brick : MonoBehaviour
             {
                 if (!IsCollected)
                 {
+                    Debug.Log("aaaaaaaaaaaaaaaa");
                     ChangeColor(bot.GetColor());
                     bot.AddBrick(this);
                 }

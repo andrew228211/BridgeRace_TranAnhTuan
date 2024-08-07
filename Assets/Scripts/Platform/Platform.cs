@@ -1,24 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
 public class Platform : MonoBehaviour
 {
     [Header("Bridge")]
     [SerializeField] private Bridge[] bridges;
+    [SerializeField] private List<Bridge> listBridgeBotHaveMoves;
     [SerializeField] private Door[] doors;
     [Header("Brick")]
     [SerializeField] private List<Vector3> listPosBrick; //Khoi tao ban dau de chua
     [SerializeField] private List<Brick> listActiveBrick;
-    [SerializeField] private int numBrickToPassLevel;
     [SerializeField] private Transform parentBrick;
     [SerializeField] private int w;
     [SerializeField] private int h;
+    public int numBrickToPass { get; private set; }
     public void Onit()
     {
         InitBrick();
-        InitBridge();
+        //InitBridge();
         InitDoor();
+        numBrickToPass = 18;
     }
     private void InitDoor()
     {
@@ -30,6 +34,27 @@ public class Platform : MonoBehaviour
             }
         }
     }
+    #region Handle Bridge
+    public Bridge GetBridge(Character bot)
+    {
+        listBridgeBotHaveMoves.Clear();
+        foreach(Bridge bridge in bridges)
+        {
+            if (bridge.CheckFirstStep(bot))
+            {
+                listBridgeBotHaveMoves.Add(bridge);
+            }
+        }
+        if (listBridgeBotHaveMoves.Count > 0)
+        {
+            return listBridgeBotHaveMoves[Random.Range(0, listBridgeBotHaveMoves.Count)];
+        }
+        else
+        {
+            return bridges[Random.Range(0, bridges.Length)];
+        }
+    }
+    #endregion
     private void InitBridge()
     {
         for(int i=0; i < bridges.Length; i++)
@@ -68,14 +93,24 @@ public class Platform : MonoBehaviour
     }
 
 
-    public void GenerateBrick(int num, TypeColor color)
+    public void GenerateBrick(int num, TypeColor color,Character character=null)
     {
+        Bot bot = null;
+        if (character != null)
+        {
+            bot = character as Bot;        
+        }
+
         for (int i = 0; i < num && listPosBrick.Count > 0; i++)
         {
             int pos=Random.Range(0,listPosBrick.Count);
             Brick brick = SpawnBrick(listPosBrick[pos]);
             brick.ChangeColor(color);
             listActiveBrick.Add(brick);
+            if (bot != null)
+            {
+                bot.SetTargetBrick(listPosBrick[pos]);
+            }
             listPosBrick.Remove(listPosBrick[pos]);
         }
     }

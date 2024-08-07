@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bridge : MonoBehaviour
 {
+    [SerializeField] private List<Step> steps;
+    [Header("Spawn Step")]
     [SerializeField] private Transform _posBridge;
     [SerializeField] private float _lenBridge;
     [SerializeField] private Vector3 _offset;
@@ -29,5 +31,18 @@ public class Bridge : MonoBehaviour
             X.transform.localRotation = Quaternion.Euler(Vector3.zero);
             //Debug.Log(X.transform.localRotation);
         }
+    }
+
+    public bool CheckFirstStep(Character bot)
+    {
+        if (bot.GetColor() == steps[0].GetColor())
+        {
+            return true;
+        }
+        return false;
+    }
+    public Vector3 GetFirstPos()
+    {
+        return steps[0].transform.position;
     }
 }

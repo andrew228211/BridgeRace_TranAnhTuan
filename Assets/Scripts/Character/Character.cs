@@ -106,7 +106,7 @@ public class Character : MonoBehaviour
             brick.ResetBrick();
             brick.gameObject.SetActive(false);
             _stackBrick.Pop();
-            oldPlatform.GenerateBrick(1, _color);
+            oldPlatform.GenerateBrick(1, _color,this);
         }
     }
 

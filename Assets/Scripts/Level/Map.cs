@@ -29,7 +29,7 @@ public class Map : MonoBehaviour
         player.gameObject.SetActive(true);
         player.oldPlatform = listPlatforms[0];
         player.SetColor(1);
-        listPlatforms[0].GenerateBrick(16, player.GetColor());
+        listPlatforms[0].GenerateBrick(18, player.GetColor());
     }
     private void InitBots()
     {
@@ -39,7 +39,8 @@ public class Map : MonoBehaviour
             bots[i].gameObject.SetActive(true);
             bots[i].oldPlatform = listPlatforms[0];
             bots[i].SetColor(i + 2);
-            listPlatforms[0].GenerateBrick(16, bots[i].GetColor());
+            listPlatforms[0].GenerateBrick(18, bots[i].GetColor(), bots[i]);
+            bots[i].Init();
         }
     }
 }
