@@ -6,12 +6,11 @@ public class BotMoveState : IState<Bot>
 {
     Vector3 targetPos = Vector3.zero;
     private float thresold = 0.1f;
-    private bool checkTarget;
     public void OnEnter(Bot t)
     {
         SetupPos(t);
         t.anim.SetFloat("velocity", 0);
-        checkTarget = false;
+        Debug.Log(t.NumberBrickToPassPlatform);
     }
 
     public void OnExecute(Bot t)
@@ -25,6 +24,7 @@ public class BotMoveState : IState<Bot>
         {
             t.anim.SetFloat("velocity", 0);
         }
+        
         if (t.numberBrickToCollect <= 0)
         {
             t.ChangeState(t._botBuildState);
@@ -40,17 +40,14 @@ public class BotMoveState : IState<Bot>
     }
     private void SetupPos(Bot t)
     {
-        
         if (t.numberBrickToCollect <= 0)
         {
             Bridge bridge = t.oldPlatform.GetBridge(t);
             targetPos = bridge.GetFirstPos();
-            checkTarget = true;
         }
         else
         {
             targetPos = t.GetTargetBrick();
-            checkTarget = false;
         }
         t.SetDestination(targetPos);
     }

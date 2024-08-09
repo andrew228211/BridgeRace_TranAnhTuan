@@ -27,19 +27,42 @@ public class Door : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(TagManager.Player_Tag) || other.CompareTag(TagManager.Bot_Tag))
+        if (other.CompareTag(TagManager.Player_Tag))
         {
             Character character = other.GetComponent<Character>();
-            TurnOffMesh();           
+            TurnOffMesh();
             if (character.IsOnGround)
             {
-                character.oldPlatform.TriggerDoor();
-               
+
+                Player player = character as Player;
+                player.SetMoveSpeed(0);
             }
-            else if (_platform != character.oldPlatform)
+            if (_platform != character.oldPlatform)
             {
                 character.ChangePlatform(_platform);
             }
         }
+        else if (other.CompareTag(TagManager.Bot_Tag)){
+            Bot character = other.GetComponent<Bot>();
+            if (character.NumberBrickToPassPlatform <= 0)
+            {
+                TurnOffMesh();
+                character.RemoveAllTargetInList();
+                if (_platform != character.oldPlatform)
+                {
+                    character.ChangePlatform(_platform);
+                }
+                character.UpdateNumberBrickToCollect();
+                Debug.Log(character.NumberBrickToPassPlatform + " not");
+                character.ChangeState(character._botMoveState);
+            }          
+        }
     }
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if(other.TryGetComponent<Player>(out Player player))
+    //    {
+    //        player.SetMoveSpeed(5);
+    //    }
+    //}
 }

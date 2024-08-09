@@ -129,7 +129,8 @@ public class Character : MonoBehaviour
             RemoveAllBrick();
             oldPlatform.HideBrickAfterChararacterPass(_color);
             oldPlatform = platform;
-            oldPlatform.UpdateBrick(_color);
+            oldPlatform.UpdateBrick(_color,this);
+            Debug.Log("update platform");
         }   
     }
 

@@ -43,6 +43,10 @@ public class Bot : Character
     {
         return _listTargetBricks[0];
     }
+    public void RemoveAllTargetInList()
+    {
+        _listTargetBricks.Clear();
+    }
     public void RemovePosInStackAfterCollision(Vector3 pos)
     {
         _listTargetBricks.Remove(pos);
@@ -60,8 +64,7 @@ public class Bot : Character
     }
     public void UpdateNumberBrickToCollect()
     {
-        numberBrickToCollect = Random.Range(1,Mathf.Max(1,Mathf.Min(numberBrickToPassPlatform,18)));
-        Debug.Log(NumberBrickToPassPlatform);
+        numberBrickToCollect = Random.Range(1,Mathf.Max(1,Mathf.Min(numberBrickToPassPlatform,10)));
     }
     public override void Init()
     {

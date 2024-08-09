@@ -90,14 +90,14 @@ public class Brick : MonoBehaviour
     }
     public void Collect()
     {
-        IsCollected = true;
+      //  IsCollected = true;
         rbBrick.isKinematic = true;
         boxCollider.enabled = false;
     }
     public void ResetBrick()
     {
         tfrmBrick.rotation = Quaternion.Euler(Vector3.zero);
-        IsCollected = false;
+      //  IsCollected = false;
         rbBrick.isKinematic = true;
         boxCollider.enabled = true;
     }

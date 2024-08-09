@@ -25,15 +25,8 @@ public class BotBuildState : IState<Bot>
             t.anim.SetFloat("velocity", 0);
         }
         if (!t.CheckImageBrick())
-        {
-            if (t.NumberBrickToPassPlatform <= 0)
-            {
-                t.StopMoving();
-            }
-            else
-            {
-                t.ChangeState(t._botMoveState);
-            } 
+        {          
+            t.ChangeState(t._botMoveState);
 
         }
     }

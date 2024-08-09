@@ -37,23 +37,20 @@ public class Player : Character
         if (collision.collider.CompareTag(TagManager.Wall_Tag))
         {
             _moveSpeed = 0;
-        }
-        else if (collision.collider.CompareTag(TagManager.Door_Tag))
-        {
-            _moveSpeed = 0;
-        }
+        }     
     }
     private void OnCollisionExit(Collision collision)
     {
         if (collision.collider.CompareTag(TagManager.Wall_Tag))
         {
             _moveSpeed = 5;
-        }
-        else if (collision.collider.CompareTag(TagManager.Door_Tag))
-        {
-            _moveSpeed = 5;
-        }
+        }   
     }
+    public void SetMoveSpeed(float _moveSpeed)
+    {
+        this._moveSpeed = _moveSpeed;
+    }
+
     private void Move()
     {      
         _moveDirection = _joystick.GetDirection3V();

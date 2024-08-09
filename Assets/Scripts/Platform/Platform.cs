@@ -79,16 +79,18 @@ public class Platform : MonoBehaviour
         {
             for(int j = 0; j < h; j++)
             {
-                Vector3 pos = new Vector3(2*i-w,0.5f,2*j-h) + new Vector3(1.5f,0,2f);
+                Vector3 pos = new Vector3(2*i-w,0.5f,2*j-h) + new Vector3(1.5f,0,2f) + transform.position;
                 listPosBrick.Add(pos);
             }
         }
     }
     private Brick SpawnBrick(Vector3 pos)
     {
+
         Brick brick = ObjectPool.Instance.GetObjet("brick").GetComponent<Brick>();
         brick.transform.position = pos;
         brick.transform.parent = parentBrick;
+        brick.ResetBrick();
         return brick;
     }
 
@@ -127,13 +129,22 @@ public class Platform : MonoBehaviour
             if(listActiveBrick[i].color == color)
             {
                 listActiveBrick[i].gameObject.SetActive(false);
+                listPosBrick.Remove(listActiveBrick[i].tfrmBrick.position);
             }
         }
     }
 
-    public void UpdateBrick(TypeColor color)
+    public void UpdateBrick(TypeColor color,Character character=null)
     {
-        GenerateBrick(6, color);
+        Bot bot = null;
+        if (character != null)
+        {
+            bot = character as Bot;
+            bot.NumberBrickToPassPlatform = 20;
+        }
+        
+        GenerateBrick(10, color,character);
+
     }
     #endregion
 }
